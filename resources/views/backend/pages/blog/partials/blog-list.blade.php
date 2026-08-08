@@ -38,7 +38,7 @@
             </td>
             <td>
                 <a href="{{ route('manage-blog.edit', $blog->id) }}" class="fw-medium">
-                    {{ Str::limit($blog->title, 50) }}
+                    {{ Str::limit($blog->title, 30) }}
                 </a>
             </td>
             <td class="text-muted">{{ $blog->slug }}</td>
