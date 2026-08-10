@@ -6,6 +6,7 @@
 <meta name="csrf-token" content="{{ csrf_token() }}" />
 <meta name="base-url" content="{{URL::to('/')}}">
 
+<link href="{{asset('backend/assets/libs/sweetalert2/sweetalert2.min.css')}}" rel="stylesheet" type="text/css" />
 <link rel="shortcut icon" href="{{asset('backend/assets/images/fav.png')}}">
 <link href="{{asset('backend/assets/libs/jsvectormap/jsvectormap.min.css')}}" rel="stylesheet" type="text/css" />
 <link href="{{asset('backend/assets/libs/swiper/swiper-bundle.min.css')}}" rel="stylesheet" type="text/css" />

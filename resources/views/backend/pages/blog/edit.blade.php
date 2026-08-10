@@ -99,12 +99,30 @@
                                     </div>
                                 </div>
 
-                                <div class="col-lg-12">
+                                <div class="col-lg-6">
                                     <div class="mb-3">
                                         <label for="short_desc" class="form-label">Short Description</label>
                                         <textarea class="form-control @error('short_desc') is-invalid @enderror"
                                             id="short_desc" name="short_desc" rows="2">{{ old('short_desc', $blog->short_desc) }}</textarea>
                                         @error('short_desc')<div class="invalid-feedback">{{ $message }}</div>@enderror
+                                    </div>
+                                </div>
+
+                                <div class="col-lg-6">
+                                    <div class="mb-3">
+                                        <label for="short_desc" class="form-label">Reading Time</label>
+                                        <input type="text"
+                                            name="reading_time"
+                                            class="form-control"
+                                            placeholder="e.g. 5 min read"
+                                            value="{{ old('reading_time', $blog->reading_time ?? '') }}">
+
+                                        <small class="text-muted">
+                                            Leave blank to calculate automatically from content.
+                                        </small>
+                                        @error('reading_time')
+                                        <div class="invalid-feedback">{{ $message }}</div>
+                                        @enderror
                                     </div>
                                 </div>
 
@@ -190,9 +208,9 @@
                                         <label class="form-label">Existing Gallery Images</label>
                                         <div id="existingGalleryWrapper" class="d-flex flex-wrap gap-2 mb-3">
                                             @foreach($blog->images as $image)
-                                            @if($image->image_url)
+                                            @if($image->image)
                                             <div class="position-relative gallery-existing-item" data-image-id="{{ $image->id }}">
-                                                <img src="{{ $image->image_url }}" width="80" height="80" style="object-fit:cover;border-radius:6px;">
+                                                <img src="{{ asset('storage/images/blog/gallery/' . $image->image) }}" width="80" height="80" style="object-fit:cover;border-radius:6px;">
                                                 <button type="button"
                                                     class="btn btn-sm btn-danger position-absolute top-0 end-0 p-0 remove-existing-gallery-btn"
                                                     style="width:22px;height:22px;line-height:1;"

@@ -115,7 +115,7 @@
                                     </div>
                                 </div>
 
-                                <div class="col-lg-12">
+                                <div class="col-lg-6">
                                     <div class="mb-3">
                                         <label for="short_desc" class="form-label">Short Description</label>
                                         <textarea
@@ -125,6 +125,23 @@
                                             rows="2"
                                             placeholder="Short summary shown in listings">{{ old('short_desc') }}</textarea>
                                         @error('short_desc')
+                                        <div class="invalid-feedback">{{ $message }}</div>
+                                        @enderror
+                                    </div>
+                                </div>
+                                <div class="col-lg-6">
+                                    <div class="mb-3">
+                                        <label for="short_desc" class="form-label">Reading Time</label>
+                                        <input type="text"
+                                            name="reading_time"
+                                            class="form-control"
+                                            placeholder="e.g. 5 min read"
+                                            value="{{ old('reading_time', $blog->reading_time ?? '') }}">
+
+                                        <small class="text-muted">
+                                            Leave blank to calculate automatically from content.
+                                        </small>
+                                        @error('reading_time')
                                         <div class="invalid-feedback">{{ $message }}</div>
                                         @enderror
                                     </div>

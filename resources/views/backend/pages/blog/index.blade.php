@@ -30,5 +30,28 @@
 </div>
 @endsection
 @push('scripts')
+<script>
+   $(document).ready(function() {
+      $('.show_confirm').click(function(event) {
+         var form = $(this).closest("form"); 
+         var name = $(this).data("name");
+         event.preventDefault();
 
+         Swal.fire({
+               title: `Are you sure you want to delete this ${name}?`,
+               text: "If you delete this, it will be gone forever.",
+               icon: "warning",
+               showCancelButton: true,
+               confirmButtonText: "Yes, delete it!",
+               cancelButtonText: "Cancel",
+               dangerMode: true,
+         }).then((result) => {
+               if (result.isConfirmed) {
+                  form.submit();
+               }
+         });
+      });
+           
+   });
+</script>
 @endpush

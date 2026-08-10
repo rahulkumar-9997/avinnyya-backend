@@ -12,9 +12,18 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Str;
+use Illuminate\Support\Facades\Cache;
 
 class BlogController extends Controller
 {
+    private function calculateReadingTime($content)
+    {
+        $content = strip_tags($content ?? '');
+        $wordCount = str_word_count($content);
+        $minutes = max(1, ceil($wordCount / 200));
+        return $minutes . ' min read';
+    }
+
     public function index()
     {
         $blogs = Blog::latest()->paginate(15);
@@ -32,6 +41,7 @@ class BlogController extends Controller
             'title' => 'required|string|max:255',
             'slug' => 'nullable|string|max:255|unique:blogs,slug',
             'short_desc' => 'nullable|string|max:500',
+            'reading_time' => 'nullable|string|max:100',
             'content' => 'required|string',
             'meta_title' => 'nullable|string|max:255',
             'meta_description' => 'nullable|string|max:500',
@@ -98,6 +108,9 @@ class BlogController extends Controller
                 'slug' => $slug,
                 'short_desc' => $validated['short_desc'] ?? null,
                 'content' => $validated['content'],
+                'reading_time' => !empty($validated['reading_time'])
+                ? $validated['reading_time']
+                : $this->calculateReadingTime($validated['content']),
                 'meta_title' => $validated['meta_title'] ?? null,
                 'meta_description' => $validated['meta_description'] ?? null,
                 'main_image' => $mainImage,
@@ -156,6 +169,7 @@ class BlogController extends Controller
                 }
             }
             DB::commit();
+            Cache::forget('api_blog_list');
             return redirect()->route('manage-blog.index')->with('success', 'Blog created successfully!');
         } catch (\Throwable $e) {
             DB::rollBack();
@@ -196,6 +210,7 @@ class BlogController extends Controller
             'slug' => 'nullable|string|max:255|unique:blogs,slug,' . $blog->id,
             'short_desc' => 'nullable|string|max:500',
             'content' => 'required|string',
+            'reading_time' => 'nullable|string|max:100',
             'meta_title' => 'nullable|string|max:255',
             'meta_description' => 'nullable|string|max:500',
             'main_image' => 'nullable|image|mimes:jpg,jpeg,png,webp|max:2048',
@@ -266,6 +281,9 @@ class BlogController extends Controller
                 'title' => $validated['title'],
                 'short_desc' => $validated['short_desc'] ?? null,
                 'content' => $validated['content'],
+                'reading_time' => !empty($validated['reading_time'])
+                ? $validated['reading_time']
+                : $this->calculateReadingTime($validated['content']),
                 'meta_title' => $validated['meta_title'] ?? null,
                 'meta_description' => $validated['meta_description'] ?? null,
                 'main_image' => $mainImage,
@@ -353,6 +371,7 @@ class BlogController extends Controller
             }
 
             DB::commit();
+            Cache::forget('api_blog_list');
             foreach ($toDeleteOnSuccess as $file) {
                 ImageHelper::deleteSingleImage($file['name'], $file['folder']);
             }

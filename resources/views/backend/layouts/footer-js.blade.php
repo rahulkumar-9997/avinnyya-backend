@@ -15,6 +15,8 @@
 <!-- <script src="{{ asset('backend/assets/libs/swiper/swiper-bundle.min.js') }}"></script> -->
 <!-- Dashboard init -->
 <!-- <script src="{{ asset('backend/assets/js/pages/dashboard-ecommerce.init.js') }}"></script> -->
+<script src="{{ asset('backend/assets/libs/sweetalert2/sweetalert2.min.js')}}"></script>
+<script src="{{ asset('backend/assets/js/pages/sweetalerts.init.js')}}"></script>
 <!-- App js -->
 <script src="{{ asset('backend/assets/js/app.js') }}"></script>
 

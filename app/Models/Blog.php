@@ -13,6 +13,7 @@ class Blog extends Model
         'slug',
         'short_desc',
         'content',
+        'reading_time',
         'meta_title',
         'meta_description',
         'main_image',
@@ -40,5 +41,5 @@ class Blog extends Model
     public function images(): HasMany
     {
         return $this->hasMany(BlogImage::class);
-    }
+    }   
 }
