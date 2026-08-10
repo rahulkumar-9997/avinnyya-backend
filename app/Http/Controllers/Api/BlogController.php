@@ -12,48 +12,60 @@ class BlogController extends Controller
 {  
 
     public function blogList()
-    {
-        $blogs = Cache::remember('api_blog_list', now()->addHours(24), function () {
-            return Blog::where('status', 'published')
-                ->select(
-                    'id',
-                    'title',
-                    'slug',
-                    'short_desc',
-                    'content',
-                    'reading_time',
-                    'main_image',
-                    'page_image',
-                    'visitor_count',
-                    'published_at'
-                )
-                ->orderBy('published_at', 'desc')
-                ->get()
-                ->map(function ($blog) {
-                    return [
-                        'id' => $blog->id,
-                        'title' => $blog->title,
-                        'slug' => $blog->slug,
-                        'visitor_count' => $blog->visitor_count ?? 0,
-                        'reading_time' => $blog->reading_time ?? null,
-                        'short_desc' => $blog->short_desc
-                            ?? ($blog->content
-                                ? Str::limit(strip_tags($blog->content), 100)
-                                : null),
-                        'main_image' => $blog->main_image
-                            ? asset('storage/images/blog/' . $blog->main_image)
-                            : null,
-                        'published_at' => $blog->published_at
-                            ? Carbon::parse($blog->published_at)->format('d M Y')
-                            : null,
-                    ];
-                });
+    {        
+        $blogs = Blog::where('status', 'published')
+            ->select(
+                'id',
+                'title',
+                'slug',
+                'short_desc',
+                'content',
+                'reading_time',
+                'main_image',
+                'page_image',
+                'visitor_count',
+                'published_at'
+            )
+            ->orderBy('published_at', 'desc')
+            ->paginate(10);
+        $blogs->getCollection()->transform(function ($blog) {
+            return [
+                'id' => $blog->id,
+                'title' => $blog->title,
+                'slug' => $blog->slug,
+                'visitor_count' => $blog->visitor_count ?? 0,
+                'reading_time' => !empty($blog->reading_time)
+                    ? $blog->reading_time
+                    : null,
+                'short_desc' => !empty($blog->short_desc)
+                    ? $blog->short_desc
+                    : (!empty($blog->content)
+                        ? Str::limit(strip_tags($blog->content), 100)
+                        : null),
+                'main_image' => !empty($blog->main_image)
+                    ? asset('storage/images/blog/' . $blog->main_image)
+                    : null,
+
+                'published_at' => !empty($blog->published_at)
+                    ? Carbon::parse($blog->published_at)->format('d M Y')
+                    : null,
+            ];
         });
 
         return response()->json([
             'status' => true,
             'message' => 'Blog list',
-            'data' => $blogs,
+            'data' => $blogs->items(),
+            'pagination' => [
+                'current_page' => $blogs->currentPage(),
+                'per_page' => $blogs->perPage(),
+                'total' => $blogs->total(),
+                'last_page' => $blogs->lastPage(),
+                'from' => $blogs->firstItem(),
+                'to' => $blogs->lastItem(),
+                'next_page_url' => $blogs->nextPageUrl(),
+                'prev_page_url' => $blogs->previousPageUrl(),
+            ],
         ]);
     }
 
