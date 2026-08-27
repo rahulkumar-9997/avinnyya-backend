@@ -84,6 +84,8 @@
                                         <select class="form-select @error('status') is-invalid @enderror" id="blog_status" name="status">
                                             <option value="published" {{ old('status', $blog->status) == 'published' ? 'selected' : '' }}>Published</option>
                                             <option value="draft" {{ old('status', $blog->status) == 'draft' ? 'selected' : '' }}>Draft</option>
+                                            <option value="archived" {{ old('status', $blog->status) == 'archived' ? 'selected' : '' }}>Archived</option>
+                                            
                                         </select>
                                         @error('status')<div class="invalid-feedback">{{ $message }}</div>@enderror
                                     </div>

@@ -93,6 +93,7 @@
                                         <select class="form-select @error('status') is-invalid @enderror" id="blog_status" name="status">
                                             <option value="published" {{ old('status') == 'published' ? 'selected' : '' }}>Published</option>
                                             <option value="draft" {{ old('status') == 'draft' ? 'selected' : '' }}>Draft</option>
+                                            <option value="archived" {{ old('status') == 'archived' ? 'selected' : '' }}>Archived</option>
                                         </select>
                                         @error('status')
                                         <div class="invalid-feedback">{{ $message }}</div>
