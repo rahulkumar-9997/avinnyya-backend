@@ -47,10 +47,10 @@
                                             id="main_image" name="main_image" accept="image/png, image/jpeg, image/webp">
                                         @error('main_image')<div class="invalid-feedback">{{ $message }}</div>@enderror
 
-                                        @if($blog->main_image_url)
+                                        @if($blog->main_image && \Illuminate\Support\Facades\Storage::disk('public')->exists('images/blog/' . $blog->main_image))
                                         <div class="mt-2">
                                             <small class="text-muted d-block mb-1">Current image:</small>
-                                            <img src="{{ $blog->main_image_url }}" width="100" height="100" style="object-fit:cover;border-radius:6px;">
+                                            <img src="{{ asset('storage/images/blog/' . $blog->main_image) }}" width="100" height="100" style="object-fit:cover;border-radius:6px;">
                                         </div>
                                         @endif
                                         <img id="mainImagePreview" class="mt-2 d-none" width="100" height="100" style="object-fit:cover;border-radius:6px;">
@@ -64,10 +64,10 @@
                                             id="page_image" name="page_image" accept="image/png, image/jpeg, image/webp">
                                         @error('page_image')<div class="invalid-feedback">{{ $message }}</div>@enderror
 
-                                        @if($blog->page_image_url)
+                                        @if($blog->page_image)
                                         <div class="mt-2">
                                             <small class="text-muted d-block mb-1">Current image:</small>
-                                            <img src="{{ $blog->page_image_url }}" width="100" height="100" style="object-fit:cover;border-radius:6px;">
+                                            <img src="{{ asset('storage/images/blog/' . $blog->page_image) }}" width="100" height="100" style="object-fit:cover;border-radius:6px;">
                                             <div class="form-check mt-1">
                                                 <input class="form-check-input" type="checkbox" id="removePageImage" name="remove_page_image" value="1">
                                                 <label class="form-check-label text-danger" for="removePageImage">Remove page image</label>

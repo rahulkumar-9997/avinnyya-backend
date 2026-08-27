@@ -6,6 +6,7 @@ use Intervention\Image\ImageManager;
 use Intervention\Image\Drivers\Gd\Driver;
 use Illuminate\Support\Facades\File;
 use Illuminate\Http\UploadedFile;
+use Illuminate\Support\Facades\Http;
 
 class ImageHelper
 {
@@ -206,5 +207,32 @@ class ImageHelper
             return File::delete($path);
         }
         return false;
+    }
+
+    public static function downloadSingleImageWebpOnly($url, $name, $folder = 'simple', $oldImage = null)
+    {
+        $fileName = $name . '.webp';
+        $basePath = storage_path("app/public/images/{$folder}/");
+        if (!File::exists($basePath)) {
+            File::makeDirectory($basePath, 0755, true);
+        }
+        if (!empty($oldImage)) {
+            $oldPath = $basePath . $oldImage;
+            if (File::exists($oldPath)) {
+                File::delete($oldPath);
+            }
+        }
+
+        $response = Http::timeout(30)->get($url);
+        if (!$response->successful()) {
+            throw new \Exception("Could not download image ({$response->status()}): {$url}");
+        }
+
+        $manager = self::getManager();
+        $manager->read($response->body())
+            ->toWebp(90)
+            ->save($basePath . $fileName);
+
+        return $fileName;
     }
 }

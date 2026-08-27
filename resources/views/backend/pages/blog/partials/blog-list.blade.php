@@ -28,6 +28,7 @@
             <td>{{ $blogs->firstItem() + $loop->index }}</td>
             <td>
                 @if($blog->main_image && \Illuminate\Support\Facades\Storage::disk('public')->exists('images/blog/' . $blog->main_image))
+
                 <img src="{{ asset('storage/images/blog/' . $blog->main_image) }}"
                     alt="{{ $blog->title }}"
                     width="50" height="50"
@@ -41,7 +42,7 @@
                     {{ Str::limit($blog->title, 30) }}
                 </a>
             </td>
-            <td class="text-muted">{{ $blog->slug }}</td>
+            <td class="text-muted">{{ Str::limit($blog->slug, 30) }}</td>
             <td>{{ $blog->published_at ? $blog->published_at->format('d M, Y') : '—' }}</td>
             <td>
                 @if($blog->status === 'published')
@@ -73,5 +74,5 @@
     </tbody>
 </table>
 <div class="mt-3">
-    {{ $blogs->links() }}
+    {{ $blogs->links('vendor.pagination.bootstrap-5') }}
 </div>
