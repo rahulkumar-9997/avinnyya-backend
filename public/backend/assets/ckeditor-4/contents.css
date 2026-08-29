@@ -1,208 +1,373 @@
 /*
 Copyright (c) 2003-2023, CKSource Holding sp. z o.o. All rights reserved.
 For licensing, see LICENSE.md or https://ckeditor.com/legal/ckeditor-oss-license
+
+Enhanced visual theme — improved typography, color palette, spacing and
+component styling on top of the original CKEditor structure.
 */
 
-body
-{
-	/* Font */
-	/* Emoji fonts are added to visualise them nicely in Internet Explorer. */
-	font-family: sans-serif, Arial, Verdana, "Trebuchet MS", "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
-	font-size: 12px;
-
-	/* Text color */
-	color: #333;
-
-	/* Remove the background color to make it transparent. */
-	background-color: #fff;
-
-	margin: 20px;
+:root {
+  /* WordPress-style palette */
+  --editor-accent: #0073aa;       /* classic WP blue */
+  --editor-accent-dark: #005b87;
+  --editor-accent-light: #007cba; /* Gutenberg blue */
+  --editor-text: #1e1e1e;
+  --editor-text-muted: #6c7781;
+  --editor-border: #dcdcde;
+  --editor-bg: #ffffff;
+  --editor-surface: #f6f7f7;
+  --editor-code-bg: #f0f0f1;
+  --editor-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
 }
 
-.cke_editable
-{
-	font-size: 13px;
-	line-height: 1.6;
-
-	/* Fix for missing scrollbars with RTL texts. (#10488) */
-	word-wrap: break-word;
+body {
+  /* WordPress default reading font stack (Georgia serif body, like TwentyTwenty themes) */
+  font-family: "Noto Serif", Georgia, "Times New Roman", serif;
+  font-size: 16px;
+  color: var(--editor-text);
+  background-color: #f0f0f1;
+  margin: 0;
+  padding: 32px 20px;
 }
 
-blockquote
-{
-	font-style: italic;
-	font-family: Georgia, Times, "Times New Roman", serif;
-	padding: 2px 0;
-	border-style: solid;
-	border-color: #ccc;
-	border-width: 0;
+/* "Paper page" look for the editable area — WordPress block-editor canvas style */
+.cke_editable {
+  box-shadow: var(--editor-shadow);
+  border: 1px solid var(--editor-border);
+  border-radius: 2px; /* WP uses very subtle/no rounding */
+  box-sizing: border-box;
+  background: var(--editor-bg);
+
+  /* WordPress editor canvas is narrower than A4 — approx 840px content width */
+  max-width: 840px;
+  min-height: 700px;
+  height: auto;
+  margin: 10px auto;
+  padding: 50px 60px;
+
+  font-family: "Noto Serif", Georgia, "Times New Roman", serif;
+  font-size: 18px;
+  line-height: 1.8;
+  color: var(--editor-text);
+  overflow-wrap: break-word;
+  word-wrap: break-word;
+
+  transition: box-shadow 0.2s ease;
 }
 
-.cke_contents_ltr blockquote
-{
-	padding-left: 20px;
-	padding-right: 8px;
-	border-left-width: 5px;
+.cke_editable:focus-within {
+  box-shadow: 0 0 0 1px var(--editor-accent-light), var(--editor-shadow);
 }
 
-.cke_contents_rtl blockquote
-{
-	padding-left: 8px;
-	padding-right: 20px;
-	border-right-width: 5px;
+.cke_editable p {
+  margin: 0 0 28px;
+  color: var(--editor-text);
 }
 
-a
-{
-	color: #0782C1;
+/* Bold headings to match the CKEditor 5 demo style */
+/* WordPress headings use a sans-serif for contrast against the serif body,
+   matching the common WP theme pattern (e.g. TwentyTwentyOne, TwentyTwentyThree) */
+.cke_editable h1,
+.cke_editable h2,
+.cke_editable h3,
+.cke_editable h4,
+.cke_editable h5,
+.cke_editable h6 {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  font-weight: 700;
+  line-height: 1.3;
+  color: #1e1e1e;
+  margin: 40px 0 20px;
 }
 
-ol,ul,dl
-{
-	/* IE7: reset rtl list margin. (#7334) */
-	*margin-right: 0px;
-	/* Preserved spaces for list items with text direction different than the list. (#6249,#8049)*/
-	padding: 0 40px;
+.cke_editable h1 {
+  font-size: 40px;
+  font-weight: 800;
+  letter-spacing: -0.02em;
 }
 
-h1,h2,h3,h4,h5,h6
-{
-	font-weight: normal;
-	line-height: 1.2;
+.cke_editable h2 {
+  font-size: 30px;
 }
 
-hr
-{
-	border: 0px;
-	border-top: 1px solid #ccc;
+.cke_editable h3 {
+  font-size: 24px;
 }
 
-img.right
-{
-	border: 1px solid #ccc;
-	float: right;
-	margin-left: 15px;
-	padding: 5px;
+.cke_editable h4 {
+  font-size: 20px;
 }
 
-img.left
-{
-	border: 1px solid #ccc;
-	float: left;
-	margin-right: 15px;
-	padding: 5px;
+.cke_editable h5 {
+  font-size: 17px;
+  color: var(--editor-text-muted);
 }
 
-pre
-{
-	white-space: pre-wrap; /* CSS 2.1 */
-	word-wrap: break-word; /* IE7 */
-	-moz-tab-size: 4;
-	tab-size: 4;
+.cke_editable h6 {
+  font-size: 14px;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--editor-text-muted);
 }
 
-.marker
-{
-	background-color: Yellow;
+/* Tables — WordPress core "table" block default styling */
+.cke_editable table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 28px 0;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  font-size: 15px;
+  border: 1px solid var(--editor-border);
 }
 
-span[lang]
-{
-	font-style: italic;
+.cke_editable th,
+.cke_editable td {
+  padding: 12px 16px;
+  border: 1px solid var(--editor-border);
+  text-align: left;
+  vertical-align: top;
 }
 
-figure
-{
-	text-align: center;
-	outline: solid 1px #ccc;
-	background: rgba(0,0,0,0.05);
-	padding: 10px;
-	margin: 10px 20px;
-	display: inline-block;
+.cke_editable tr:nth-child(even) td {
+  background-color: var(--editor-surface);
 }
 
-figure > figcaption
-{
-	text-align: center;
-	display: block; /* For IE8 */
+.cke_editable th {
+  background-color: var(--editor-surface);
+  color: var(--editor-text);
+  font-weight: 600;
+  font-size: 15px;
+  border-bottom: 2px solid var(--editor-accent);
+}
+
+/* Blockquotes — classic WordPress core "quote" block look */
+.cke_editable blockquote {
+  font-style: normal;
+  font-family: "Noto Serif", Georgia, "Times New Roman", serif;
+  font-size: 21px;
+  line-height: 1.6;
+  color: var(--editor-text);
+  background: transparent;
+  padding: 4px 0 4px 24px;
+  border-style: solid;
+  border-color: var(--editor-text);
+  border-width: 0;
+  margin: 32px 0;
+}
+
+.cke_contents_ltr blockquote {
+  padding-left: 24px;
+  padding-right: 0;
+  border-left-width: 4px;
+}
+
+.cke_contents_rtl blockquote {
+  padding-left: 0;
+  padding-right: 24px;
+  border-right-width: 4px;
+}
+
+.cke_editable blockquote cite,
+.cke_editable blockquote footer {
+  display: block;
+  margin-top: 10px;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  font-size: 14px;
+  font-style: normal;
+  color: var(--editor-text-muted);
+}
+
+/* WordPress classic link blue */
+.cke_editable a {
+  color: var(--editor-accent);
+  text-decoration: underline;
+  transition: color 0.15s ease;
+}
+
+.cke_editable a:hover {
+  color: var(--editor-accent-dark);
+}
+
+ol,
+ul,
+dl {
+  /* IE7: reset rtl list margin. (#7334) */
+  margin-right: 0px;
+  margin-bottom: 12px;
+  /* Preserved spaces for list items with text direction different than the list. (#6249,#8049) */
+  padding: 0 40px;
+}
+
+.cke_editable li {
+  margin-bottom: 6px;
+}
+
+/* Non-editable headings elsewhere on the page keep their original (non-bold) style */
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-weight: normal;
+  line-height: 1.2;
+}
+
+hr {
+  border: 0px;
+  border-top: 2px solid var(--editor-border);
+  margin: 40px auto;
+  width: 100px; /* WP separator block default: short centered rule */
+}
+
+img.right {
+  border-radius: 2px;
+  float: right;
+  margin-left: 20px;
+  margin-bottom: 10px;
+  padding: 0;
+}
+
+img.left {
+  border-radius: 2px;
+  float: left;
+  margin-right: 20px;
+  margin-bottom: 10px;
+  padding: 0;
+}
+
+/* WordPress core "code" block: light gray box, monospace, no rounding */
+pre {
+  white-space: pre-wrap; /* CSS 2.1 */
+  word-wrap: break-word; /* IE7 */
+  -moz-tab-size: 4;
+  tab-size: 4;
+  background: var(--editor-code-bg);
+  border-radius: 2px;
+  padding: 20px;
+  font-family: Menlo, Consolas, Monaco, monospace;
+  font-size: 15px;
+  color: #1e1e1e;
+  margin: 24px 0;
+}
+
+code {
+  font-family: Menlo, Consolas, Monaco, monospace;
+  background: var(--editor-code-bg);
+  padding: 2px 6px;
+  border-radius: 2px;
+  font-size: 0.9em;
+  color: #cc1818;
+}
+
+.marker {
+  background-color: #f0e68c;
+  padding: 0 2px;
+}
+
+span[lang] {
+  font-style: italic;
+}
+
+/* WordPress core "image" block with caption */
+figure {
+  text-align: center;
+  border: none;
+  outline: none;
+  background: none;
+  padding: 0;
+  margin: 32px 0;
+  display: block;
+}
+
+figure > figcaption {
+  text-align: center;
+  display: block; /* For IE8 */
+  margin-top: 10px;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  font-size: 13px;
+  color: var(--editor-text-muted);
 }
 
 a > img {
-	padding: 1px;
-	margin: 1px;
-	border: none;
-	outline: 1px solid #0782C1;
+  padding: 0;
+  margin: 0;
+  border: none;
+  outline: none;
 }
 
 /* Widget Styles */
-.code-featured
-{
-	border: 5px solid red;
+.code-featured {
+  border: 2px solid #cc1818;
+  border-radius: 2px;
 }
 
-.math-featured
-{
-	padding: 20px;
-	box-shadow: 0 0 2px rgba(200, 0, 0, 1);
-	background-color: rgba(255, 0, 0, 0.05);
-	margin: 10px;
+.math-featured {
+  padding: 20px;
+  border-radius: 2px;
+  box-shadow: none;
+  border-left: 4px solid #cc1818;
+  background-color: #fbeaea;
+  margin: 10px 0;
 }
 
-.image-clean
-{
-	border: 0;
-	background: none;
-	padding: 0;
+.image-clean {
+  border: 0;
+  background: none;
+  padding: 0;
 }
 
-.image-clean > figcaption
-{
-	font-size: .9em;
-	text-align: right;
+.image-clean > figcaption {
+  font-size: 0.9em;
+  text-align: right;
 }
 
-.image-grayscale
-{
-	background-color: white;
-	color: #666;
+.image-grayscale {
+  background-color: white;
+  color: #666;
 }
 
-.image-grayscale img, img.image-grayscale
-{
-	filter: grayscale(100%);
+.image-grayscale img,
+img.image-grayscale {
+  filter: grayscale(100%);
 }
 
-.embed-240p
-{
-	max-width: 426px;
-	max-height: 240px;
-	margin:0 auto;
+.embed-240p {
+  max-width: 426px;
+  max-height: 240px;
+  margin: 0 auto;
+  border-radius: 8px;
+  overflow: hidden;
 }
 
-.embed-360p
-{
-	max-width: 640px;
-	max-height: 360px;
-	margin:0 auto;
+.embed-360p {
+  max-width: 640px;
+  max-height: 360px;
+  margin: 0 auto;
+  border-radius: 8px;
+  overflow: hidden;
 }
 
-.embed-480p
-{
-	max-width: 854px;
-	max-height: 480px;
-	margin:0 auto;
+.embed-480p {
+  max-width: 854px;
+  max-height: 480px;
+  margin: 0 auto;
+  border-radius: 8px;
+  overflow: hidden;
 }
 
-.embed-720p
-{
-	max-width: 1280px;
-	max-height: 720px;
-	margin:0 auto;
+.embed-720p {
+  max-width: 1280px;
+  max-height: 720px;
+  margin: 0 auto;
+  border-radius: 8px;
+  overflow: hidden;
 }
 
-.embed-1080p
-{
-	max-width: 1920px;
-	max-height: 1080px;
-	margin:0 auto;
+.embed-1080p {
+  max-width: 1920px;
+  max-height: 1080px;
+  margin: 0 auto;
+  border-radius: 8px;
+  overflow: hidden;
 }

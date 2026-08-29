@@ -116,29 +116,20 @@ CKEDITOR.plugins.add("bootstrapgrid", {
         });
     },
 });
-
 window.CKEDITOR_ROUTES = window.CKEDITOR_ROUTES || {
     upload: "/ckeditor/upload",
     imagelist: "/ckeditor/images",
     delete: "/ckeditor/delete",
 };
-
-/**
- * Shared config so both the initial page-load editors and any
- * dynamically-added paragraph editors behave identically.
- */
-function getCkeditorConfig() {
-    return {
+document.querySelectorAll(".ckeditorUpdate4").forEach(function (el) {
+    CKEDITOR.replace(el, {
         removePlugins: "exportpdf",
         allowedContent: true,
         extraAllowedContent: "*(*);*{*}",
         extraPlugins: "uploadimage, sourcearea, justify, div, bootstrapgrid",
-        filebrowserUploadUrl:
-            window.CKEDITOR_ROUTES.upload + "?_token=" + window.csrfToken,
-        filebrowserImageUploadUrl:
-            window.CKEDITOR_ROUTES.upload + "?_token=" + window.csrfToken,
-        imageUploadUrl:
-            window.CKEDITOR_ROUTES.upload + "?_token=" + window.csrfToken,
+        filebrowserUploadUrl:window.CKEDITOR_ROUTES.upload + "?_token=" + window.csrfToken,
+        filebrowserImageUploadUrl:window.CKEDITOR_ROUTES.upload + "?_token=" + window.csrfToken,
+        imageUploadUrl: window.CKEDITOR_ROUTES.upload + "?_token=" + window.csrfToken,
         filebrowserUploadMethod: "form",
         baseHref: window.location.origin + "/",
         contentsCss: [
@@ -149,10 +140,10 @@ function getCkeditorConfig() {
         image_previewText: " ",
         removeDialogTabs: "image:advanced",
         on: {
-            instanceReady: function () {
+            instanceReady: function() {
                 this.dataProcessor.htmlFilter.addRules({
                     elements: {
-                        img: function (element) {
+                        img: function(element) {
                             if (element.attributes.style) {
                                 delete element.attributes.style;
                             }
@@ -163,84 +154,32 @@ function getCkeditorConfig() {
                                 delete element.attributes.height;
                             }
                             return element;
-                        },
-                    },
+                        }
+                    }
                 });
-                this.on("change", function () {
+                this.on('change', function() {
                     var data = this.getData();
-                    if (
-                        data.indexOf('style="') !== -1 ||
-                        data.indexOf('width="') !== -1
-                    ) {
-                        var cleanData = data
-                            .replace(
-                                /<img([^>]*?)style=["'][^"']*["']([^>]*?)>/gi,
-                                function (match, before, after) {
-                                    return "<img" + before + after + ">";
-                                },
-                            )
-                            .replace(/width=["'][^"']*["']/gi, "")
-                            .replace(/height=["'][^"']*["']/gi, "");
+                    if (data.indexOf('style="') !== -1 || data.indexOf('width="') !== -1) {
+                        var cleanData = data.replace(/<img([^>]*?)style=["'][^"']*["']([^>]*?)>/gi, function(match, before, after) {
+                            return '<img' + before + after + '>';
+                        }).replace(/width=["'][^"']*["']/gi, '')
+                        .replace(/height=["'][^"']*["']/gi, '');
                         if (cleanData !== data) {
                             this.setData(cleanData);
                         }
                     }
                 });
-            },
-        },
-    };
-}
-
-/**
- * Initialize a single textarea element as a CKEditor instance.
- * Safe to call multiple times - skips elements already replaced.
- */
-function initCkeditorElement(el) {
-    if (!el) return;
-    if (!el.id) {
-        el.id = "ckeditor-" + Math.random().toString(36).slice(2, 10);
-    }
-    if (CKEDITOR.instances[el.id]) {
-        return;
-    }
-    CKEDITOR.replace(el, getCkeditorConfig());
-}
-
-/**
- * Initialize every .ckeditorUpdate4 textarea within a given container
- * (defaults to the whole document). Call this again after inserting new
- * markup - e.g. a newly-added blog paragraph row - to bring its textarea
- * to life as a CKEditor instance.
- */
-window.initCkeditors = function (container) {
-    var scope = container || document;
-    scope.querySelectorAll(".ckeditorUpdate4").forEach(function (el) {
-        initCkeditorElement(el);
+            }
+        }
     });
-};
+});
 
-/**
- * Destroy a CKEditor instance bound to a given textarea element before
- * removing that element from the DOM (e.g. "Remove Paragraph"). Skipping
- * this leaves an orphaned instance in CKEDITOR.instances.
- */
-window.destroyCkeditor = function (el) {
-    if (!el || !el.id) return;
-    var instance = CKEDITOR.instances[el.id];
-    if (instance) {
-        instance.destroy(false);
-    }
-};
-
-/* Initial page-load editors (e.g. the main "content" field).*/
-window.initCkeditors();
-
-CKEDITOR.on("dialogDefinition", function (ev) {
+CKEDITOR.on('dialogDefinition', function(ev) {
     var dialogName = ev.data.name;
     var dialogDefinition = ev.data.definition;
-    if (dialogName === "image") {
+    if (dialogName === 'image') {
         dialogDefinition.width = 900;
-        dialogDefinition.height = 600;
+        dialogDefinition.height = 600; 
         dialogDefinition.resizable = CKEDITOR.DIALOG_RESIZE_BOTH;
         dialogDefinition.addContents({
             id: "gallery",
@@ -258,36 +197,32 @@ CKEDITOR.on("dialogDefinition", function (ev) {
                             </div>
                         </div>
                     `,
-                },
-            ],
+                }
+            ]
         });
-        var infoTab = dialogDefinition.getContents("info");
+        var infoTab = dialogDefinition.getContents('info');
         if (infoTab) {
-            var txtUrlField = infoTab.get("txtUrl");
+            var txtUrlField = infoTab.get('txtUrl');
             if (txtUrlField) {
-                txtUrlField.style = "width: 100%;";
+                txtUrlField.style = 'width: 100%;';
             }
-            var previewField = infoTab.get("htmlPreview");
+            var previewField = infoTab.get('htmlPreview');
             if (previewField) {
-                previewField.style = "min-height: 150px;";
+                previewField.style = 'min-height: 150px;';
             }
         }
-
+        
         var originalOnShow = dialogDefinition.onShow;
         dialogDefinition.onShow = function () {
             if (originalOnShow) {
                 originalOnShow.apply(this, arguments);
             }
-            setTimeout(function () {
+            setTimeout(function() {
                 loadSimpleGallery(true);
             }, 100);
         };
     }
-    if (
-        dialogName === "link" ||
-        dialogName === "table" ||
-        dialogName === "flash"
-    ) {
+    if (dialogName === 'link' || dialogName === 'table' || dialogName === 'flash') {
         dialogDefinition.width = 800;
         dialogDefinition.height = 500;
         dialogDefinition.resizable = CKEDITOR.DIALOG_RESIZE_BOTH;

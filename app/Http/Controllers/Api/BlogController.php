@@ -27,7 +27,7 @@ class BlogController extends Controller
                 'published_at'
             )
             ->orderBy('published_at', 'desc')
-            ->paginate(10);
+            ->paginate(12);
         $blogs->getCollection()->transform(function ($blog) {
             return [
                 'id' => $blog->id,
